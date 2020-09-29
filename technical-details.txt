@@ -1,0 +1,90 @@
+Pupil Dilation Measurement is the process in which we calculate the ratio between radius of pupil and iris.
+Pupil Dilation = Radius of pupil / Radius of iris
+In this project I tried to model this problem in finding of radius of pupil and radius of iris given an input image.
+Input image is categorized into 3 types:
+	- Face-type-1 => Contains the whole face
+	- Face-type-2 => Contains the face but not whole.
+	- Face-type-3 => Contains the image of eye.
+
+* Image is supported for all of the face types.Video is supported for only Face-type-1.
+For more info regarding Face-types please see the Results folder in which results are shared according to the face-types.
+
+For Running the code:
+	- Go to main.py
+	- You have to specify the Face-type according to your input image(Video is supported for Face-Type-1 only)
+	- You have to give the path name in the path variable.
+	- You have to specify whether the given path is video or not.
+	- Go to command line terminal and run python main.py (Code is written according to Python 3.6)
+	- You will see the result in the corresponding Face-type folder specified.
+	- Green Circle => pupil
+	- Red Circle => iris
+
+Technical Overview Details(For more details related to values please refer code): 
+Face-Type-1:
+	- Cropping Eyes => Done by using keypoints with the help of dlib.
+	- Image Steps:
+		- Pupil(Both Right + Left eye)
+			- Convert into gray scale.
+			- Median Blurred
+			- Global Histogram Equalization
+			- Binary Inverse Threshold
+			- Contours finding
+			- Min Enclosing Circle
+		- Iris(Both Right + Left eye)
+			- Iteration through blur_levels([9,11,13,15,17])
+			- For each blur_level:
+				- Convert into gray scale.
+				- Median blur according to blur_level
+				- Global Histogram Equalization
+				- Houghe Circle
+				- track the max radius and return the circle with max radius.
+
+			- final_radius_iris = (left_eye_iris_radius + right_eye_iris_radius)/2
+			- center_of_iris = center_of_pupil
+
+	- Video Steps:
+		- All the above steps for the Image Frame are same.
+		- Extra Steps:
+			- Used Moving Averages for the previous 5 points to make stable radius.
+			- Blink Detection was done because when the eyes is closed we cannot track pupil and iris radius.
+
+Face-Type-2:
+	- Cropping Eyes => Done with haarcascade eye classifier.
+	- Image Steps:
+		- Pupil(Both Right + Left eye)
+			- Convert into gray scale.
+			- Median Blurred
+			- Global Histogram Equalization
+			- Binary Inverse Threshold
+			- Contours finding
+			- Min Enclosing Circle
+
+		- Iris(Both Right + Left eye)
+			- Convert into gray scale.
+			- Median Blurred
+			- Global Histogram Equalization
+			- Sharpen Image
+			- Binary Inverse Threshold
+			- Contours finding
+			- Min Enclosing Circle
+
+Face-Type-3:
+	- Image Steps:
+		- Pupil(Both Right + Left eye)
+			- Convert into gray scale.
+			- Median Blurred
+			- Global Histogram Equalization
+			- Binary Inverse Threshold
+			- Contours finding
+			- Min Enclosing Circle
+
+		- Iris(Both Right + Left eye)
+			- Convert into gray scale.
+			- Median Blurred
+			- Global Histogram Equalization
+			- Sharpen Image
+			- Binary Inverse Threshold
+			- Contours finding
+			- Min Enclosing Circle
+
+
